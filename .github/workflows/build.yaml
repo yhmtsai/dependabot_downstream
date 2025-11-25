@@ -1,0 +1,30 @@
+name: build
+
+on:
+  push:
+    branches:
+      - 'master'
+  pull_request:
+    types: [opened,synchronize]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ (github.head_ref && github.ref) || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+    name: build
+    runs-on: [ubuntu-24.04]
+
+    steps:
+      - name: Checkout the latest code (shallow clone)
+        uses: actions/checkout@v4
+
+      - name: configure
+        run: |
+          mkdir build
+          cd build
+          cmake ..
+          make

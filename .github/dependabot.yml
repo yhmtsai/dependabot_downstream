@@ -9,5 +9,5 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "cron"
-      cronjob: "30 13 * * *" # need to have 24 hours interval at least
+      cronjob: "10 14 * * *" # need to have 24 hours interval at least
       

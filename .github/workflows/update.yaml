@@ -1,0 +1,29 @@
+name: Update CMake Version
+
+on: pull_request
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'yhmtsai/dependabot_downstream'
+    steps:
+      - name: Checkout to repository
+        uses: actions/checkout@v4
+      - name: Update Version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # we work on the updated from dependabot, so no need to check sha 
+        run: |
+          export SUBMODULE_LOCATION=dependabot_upstream
+          export UPDATE_SHA=$(git submodule status ${SUBMODULE_LOCATION} | awk '{print $3}')
+          echo "${UPDATE_SHA}" > version.txt
+          git config user.name "dependabot[bot]"
+          git config user.email "49699333+dependabot[bot]@users.noreply.github.com"
+          git add version.txt
+          git commit -m "Update Submodule Version to text"
+          git push
+        

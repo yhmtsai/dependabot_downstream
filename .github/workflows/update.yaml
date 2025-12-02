@@ -22,7 +22,7 @@ jobs:
         # we work on the updated from dependabot, so no need to check sha 
         run: |
           export SUBMODULE_LOCATION=dependabot_upstream
-          export UPDATE_SHA=$(git submodule status ${SUBMODULE_LOCATION} | awk '{print $3}')
+          export UPDATE_SHA=$(git ls-tree HEAD ${SUBMODULE_LOCATION} | awk '{print $3}')
           echo "${UPDATE_SHA}" > version.txt
           git config user.name "dependabot[bot]"
           git config user.email "49699333+dependabot[bot]@users.noreply.github.com"
